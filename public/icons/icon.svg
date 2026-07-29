@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="KokoroRead">
+  <!-- Kokoro: Japanese for heart / spirit -->
+  <defs>
+    <linearGradient id="bg" x1="18" y1="8" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c2410c"/>
+      <stop offset="55%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <path
+    fill="#fff8f0"
+    d="M64 104.5c-1.4 0-2.7-.5-3.7-1.5C48.2 91.2 38.4 82.2 31.8 74.4 24.4 65.6 20.5 57.8 20.5 49.2c0-12.2 8.9-21.7 21.2-21.7 6.6 0 12.7 3.1 16.8 8.4L64 43l5.5-7.1c4.1-5.3 10.2-8.4 16.8-8.4 12.3 0 21.2 9.5 21.2 21.7 0 8.6-3.9 16.4-11.3 25.2-6.6 7.8-16.4 16.8-28.5 28.6-1 .9-2.3 1.5-3.7 1.5z"
+  />
+</svg>

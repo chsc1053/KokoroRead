@@ -1,0 +1,283 @@
+/**
+ * @file styles.css
+ * @description Compact popup styles for KokoroRead settings.
+ *
+ * Warm ink-on-paper reading aesthetic. Playback UI lives in the floating
+ * on-page player; this popup stays settings / diagnostics only.
+ */
+
+:root {
+  color-scheme: light;
+  --ink: #1c1914;
+  --muted: #5c564c;
+  --line: #d9d2c5;
+  --paper: #f7f2e8;
+  --paper-2: #efe7d8;
+  --accent: #b45309;
+  --accent-2: #92400e;
+  --warn: #8a5a12;
+  --danger: #8b2e2e;
+  --ok: #1f6b3a;
+  --radius: 10px;
+  --font: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --ui: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 360px;
+  min-height: 320px;
+  background:
+    radial-gradient(120% 80% at 0% 0%, #fff9ef 0%, transparent 55%),
+    linear-gradient(160deg, var(--paper), var(--paper-2));
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 13px;
+}
+
+#root {
+  min-height: 320px;
+}
+
+.app {
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.brand-mark {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: block;
+}
+
+.header h1 {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.tagline {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.badge {
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.badge-playing,
+.badge-synthesizing,
+.badge-loading_model {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  color: var(--accent-2);
+}
+
+.badge-error {
+  border-color: color-mix(in srgb, var(--danger) 40%, var(--line));
+  color: var(--danger);
+}
+
+.badge-ready,
+.badge-idle {
+  color: var(--ok);
+}
+
+.panel,
+.diagnostics {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.voice-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.voice-row select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sample-btn {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: #fffdf8;
+  color: var(--accent-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.sample-btn:hover:not(:disabled) {
+  background: #f5efe3;
+  filter: none;
+}
+
+.sample-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+select {
+  width: 100%;
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: #fffdf8;
+  color: var(--ink);
+  font: inherit;
+}
+
+.backend-indicator {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.backend-indicator strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.warn {
+  margin-top: 4px;
+  color: var(--warn);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+button {
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  background: linear-gradient(180deg, #d97706, var(--accent));
+  color: #f5fffc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #fffdf8;
+  color: var(--ink);
+  border-color: var(--line);
+  font-weight: 550;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.03);
+}
+
+.meta {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.error {
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--line));
+  background: #fff5f3;
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.linkish {
+  background: transparent;
+  border: none;
+  color: var(--accent-2);
+  padding: 0;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.privacy {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.diagnostics pre {
+  margin: 0;
+  max-height: 160px;
+  overflow: auto;
+  font-size: 10px;
+  line-height: 1.35;
+}

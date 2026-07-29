@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KokoroRead floating player demo</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+        color: #1c1914;
+        background:
+          radial-gradient(900px 500px at 10% -10%, #fff4df 0%, transparent 55%),
+          linear-gradient(180deg, #fbf7ef 0%, #f0e8d8 100%);
+      }
+      .page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px 28px 120px;
+      }
+      .kicker {
+        color: #92620f;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 0 0 10px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 42px;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+      }
+      .byline {
+        margin: 0 0 28px;
+        color: #5c564c;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 13px;
+      }
+      p {
+        font-size: 18px;
+        line-height: 1.65;
+        margin: 0 0 1.1em;
+      }
+      mark.kr-highlight {
+        background: color-mix(in srgb, #f59e0b 28%, transparent);
+        border-radius: 3px;
+        padding: 0 1px;
+      }
+      .panel {
+        position: fixed;
+        right: 28px;
+        bottom: 28px;
+        z-index: 10;
+        width: 168px;
+        padding: 8px 10px 10px;
+        border-radius: 12px;
+        border: 1px solid #d9d2c5;
+        background: linear-gradient(160deg, #f7f2e8, #efe7d8);
+        color: #1c1914;
+        font: 12px/1.35 "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        box-shadow: 0 10px 30px rgba(28, 25, 20, 0.18);
+      }
+      .close {
+        position: absolute; top: 4px; right: 4px; width: 24px; height: 24px;
+        border: none; background: transparent; color: #5c564c; border-radius: 6px; font-size: 16px;
+      }
+      .transport { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 4px 0 8px; }
+      .transport-row { display: flex; align-items: center; justify-content: center; gap: 6px; }
+      .status-msg { margin: 0; color: #5c564c; font-size: 10px; text-align: center; }
+      .play-wrap { position: relative; width: 64px; height: 64px; display: grid; place-items: center; }
+      .ring { position: absolute; inset: 0; width: 64px; height: 64px; transform: rotate(-90deg); overflow: visible; }
+      .ring-track, .ring-synth, .ring-progress { fill: none; stroke-linecap: round; }
+      .ring-track { stroke: rgba(180, 83, 9, 0.14); stroke-width: 5.5; }
+      .ring-synth { stroke: rgba(232, 184, 109, 0.9); stroke-width: 6; }
+      .ring-progress { stroke: rgba(180, 83, 9, 0.95); stroke-width: 4.5; }
+      .play-pause {
+        position: relative; z-index: 1; width: 46px; height: 46px; border-radius: 50%;
+        border: 1px solid color-mix(in srgb, #b45309 35%, #fff8eb);
+        background: linear-gradient(180deg, #d97706, #b45309); color: #fffaf0;
+        display: grid; place-items: center; padding: 0;
+        box-shadow: 0 1px 0 rgba(255,250,240,0.22) inset, 0 4px 14px rgba(180,83,9,0.22);
+      }
+      .play-pause svg, .skip svg { display: block; fill: currentColor; }
+      .play-pause svg { width: 20px; height: 20px; }
+      .skip {
+        width: 32px; height: 32px; border-radius: 50%; border: 1px solid #d9d2c5;
+        background: #fffdf8; color: #1c1914; display: grid; place-items: center; padding: 0;
+      }
+      .skip svg { width: 14px; height: 14px; }
+      .footer { display: flex; align-items: center; justify-content: center; gap: 6px; }
+      .full-page {
+        border: 1px solid #d9d2c5; background: #fffdf8; color: #1c1914; border-radius: 7px;
+        padding: 5px 8px; font: inherit; font-size: 11px; font-weight: 600;
+      }
+      .rate {
+        display: inline-flex; align-items: center; gap: 2px; border: 1px solid #d9d2c5;
+        border-radius: 7px; background: #fffdf8; padding: 1px;
+      }
+      .rate-btn { width: 22px; height: 22px; border: none; border-radius: 5px; background: transparent; font-size: 14px; }
+      .rate-value { min-width: 2.6em; text-align: center; font-size: 10px; color: #5c564c; font-variant-numeric: tabular-nums; }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <p class="kicker">Newsletter · Local TTS demo</p>
+      <h1>Reading without giving your words away</h1>
+      <p class="byline">KokoroRead · on-device speech · WebGPU</p>
+      <p>
+        <mark class="kr-highlight">Kokoro is a Japanese word that translates to “heart” or “spirit.”</mark>
+        KokoroRead keeps that spirit: your articles stay in the browser while a compact neural voice reads them aloud.
+      </p>
+      <p>
+        Select a passage or open the floating player to read the full page. Pause, skip chunks, and nudge the speaking rate — all without a cloud TTS API.
+      </p>
+      <p>
+        After the first model cache, synthesis continues offline. System voices remain available when you want instant playback without downloading weights.
+      </p>
+    </article>
+
+    <div class="panel" id="player" role="dialog" aria-label="KokoroRead player">
+      <button type="button" class="close" aria-label="Close">×</button>
+      <div class="transport">
+        <div class="transport-row">
+          <button type="button" class="skip" aria-label="Previous">
+            <svg viewBox="0 0 24 24"><path d="M6 6h2.2v12H6V6zm3.3 6 8.7 6.2V5.8L9.3 12z"/></svg>
+          </button>
+          <div class="play-wrap">
+            <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="ring-track" cx="32" cy="32" r="23" />
+              <circle class="ring-synth" cx="32" cy="32" r="23" stroke-dasharray="144.51" stroke-dashoffset="28.9" />
+              <circle class="ring-progress" cx="32" cy="32" r="23" stroke-dasharray="144.51" stroke-dashoffset="57.8" />
+            </svg>
+            <button type="button" class="play-pause" aria-label="Pause">
+              <svg viewBox="0 0 24 24"><path d="M7 5h3.5v14H7V5zm6.5 0H17v14h-3.5V5z"/></svg>
+            </button>
+          </div>
+          <button type="button" class="skip" aria-label="Next">
+            <svg viewBox="0 0 24 24"><path d="M15.8 6H18v12h-2.2V6zM6 18.2 14.7 12 6 5.8v12.4z"/></svg>
+          </button>
+        </div>
+        <p class="status-msg">Playing</p>
+      </div>
+      <div class="footer">
+        <button type="button" class="full-page">Read all</button>
+        <div class="rate" title="Speaking rate">
+          <button type="button" class="rate-btn" aria-label="Slower">−</button>
+          <span class="rate-value">1.00×</span>
+          <button type="button" class="rate-btn" aria-label="Faster">+</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
